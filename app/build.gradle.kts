@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * This software is proprietary and may not be copied, modified,
+ * or distributed without explicit permission from UniCro, Inc US.
+ */
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,13 +10,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.unitrack"
-    compileSdk = 35
+    namespace = "com.unicro.uniscout"
+    compileSdk = 35 // Or the latest SDK version
 
     defaultConfig {
-        applicationId = "com.example.unitrack"
-        minSdk = 31
-        targetSdk = 35
+        applicationId = "com.unicro.uniscout"
+        minSdk = 31 // Set to Android 12
+        targetSdk = 35 // Or the latest SDK version
         versionCode = 1
         versionName = "1.0"
 
@@ -20,7 +25,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled= false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<!-- Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+This software is proprietary and may not be copied, modified, or distributed
+without explicit permission from UniCro, Inc US. -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <tech-list>
         <tech>android.nfc.tech.NfcA</tech>
         <tech>android.nfc.tech.Ndef</tech>

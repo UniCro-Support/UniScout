@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UniTrack"
+rootProject.name = "UniScout"
 include(":app")

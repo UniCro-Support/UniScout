@@ -1,14 +1,14 @@
 [versions]
 androidx-core-ktx = "1.16.0"
 androidx-activity-compose = "1.10.1"
-androidx-compose-bom = "2025.04.00"
+androidx-compose-bom = "2025.04.01"
 androidx-lifecycle = "2.8.7"
 kotlinx-coroutines = "1.10.2"
 material = "1.12.0"
 junit = "4.13.2"
 androidx-junit = "1.2.1"
 androidx-espresso-core = "3.6.1"
-androidx-ui-test-junit4 = "1.7.8"
+androidx-ui-test-junit4 = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx" }
@@ -32,6 +32,6 @@ androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest" }
 
 [plugins]
-android-application = { id = "com.android.application", version = "8.9.1" }
+android-application = { id = "com.android.application", version = "8.9.2" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.0.21" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "2.0.21" }

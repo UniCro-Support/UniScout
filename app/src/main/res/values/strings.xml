@@ -1,4 +1,18 @@
+<!-- Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+This software is proprietary and may not be copied, modified, or distributed
+without explicit permission from UniCro, Inc US. -->
 <resources>
     <string name="app_name">UniScout</string>
-    <string name="hello_uniscout">Hello, UniScout!</string>
+    <string name="hello_uniscout">\t\t\t\t\t\t\t\t\t\t\t\t\tWelcome UniScouter\n\t\tUniScout is here to do the hard work,\n\t\t\t\t\t\t\tso you get peace of mind! </string>
+    <string name="copyright_text">Copyright (&#169;) 2025 UniCro, Inc US. All rights reserved. This software is proprietary and may not be copied, modified, or distributed without explicit permission from UniCro, Inc US.</string>
+    <string name="scan_nfc">SCAN NFC</string>
+    <string name="scan_uwb">SCAN UWB</string>
+    <string name="scan_bt">SCAN BT</string>
+    <string name="scan_ble">SCAN\nBLE</string>
+    <string name="scan_all">SCAN\nALL BANDS</string>
+    <string name="scan_wifi">SCAN WIFI\n(under development)</string>
+    <string name="about_text">ABOUT</string>
+    <string name="support_text">SUPPORT</string>
+    
+    
 </resources>
