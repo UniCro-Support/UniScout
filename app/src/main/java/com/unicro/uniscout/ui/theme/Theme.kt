@@ -1,6 +1,8 @@
-package com.example.unitrack.ui.theme
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ */
+package com.unicro.uniscout.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -34,7 +36,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun UniTrackTheme(
+fun UniScoutTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,

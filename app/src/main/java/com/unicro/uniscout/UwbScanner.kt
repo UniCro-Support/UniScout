@@ -1,7 +1,11 @@
-package com.example.unitrack
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * This software is proprietary and may not be copied, modified,
+ * or distributed without explicit permission from UniCro, Inc US.
+ */
+package com.unicro.uniscout
 
 import android.content.Context
-import android.uwb.UwbManager
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,6 +13,11 @@ import kotlinx.coroutines.flow.StateFlow
 class UwbScanner(private val context: Context) {
 
     private val uwbManager: UwbManager? = ContextCompat.getSystemService(context, UwbManager::class.java)
+
+    class UwbManager {
+
+    }
+
     private val _trackers = MutableStateFlow<List<UwbDevice>>(emptyList())
     val trackers: StateFlow<List<UwbDevice>> = _trackers
 

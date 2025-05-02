@@ -1,4 +1,7 @@
-package com.example.unitrack.ui.theme
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ */
+package com.unicro.uniscout.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

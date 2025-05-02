@@ -1,23 +1,35 @@
-package com.example.unitrack
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * This software is proprietary and may not be copied, modified,
+ * or distributed without explicit permission from UniCro, Inc US.
+ */
+package com.unicro.uniscout
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class BluetoothScanner {
 
-    private val bluetoothAdapter: BluetoothAdapter? = ContextCompat.getSystemService(
-        ContextCompat.getSystemServiceName(Context.BLUETOOTH_SERVICE)!!
-    ) as BluetoothAdapter?
+@RequiresApi(Build.VERSION_CODES.S) // API 31 (Android 12)
+@SuppressLint("ObsoleteSdkInt", "UNCHECKED_CAST", "ServiceCast") // Suppress both warnings for the entire class
+class BluetoothScanner(private val context: Context) {
+
+    private val bluetoothAdapter: BluetoothAdapter? =
+        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothAdapter?
+
     private val scanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
     private val _devices = MutableStateFlow<List<ScanResult>>(emptyList())
-    val devices: StateFlow<List<ScanResult>> = _devices
+    val devices: StateFlow<List<ScanResult>> = _devices.asStateFlow()
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult?) {
@@ -34,24 +46,30 @@ class BluetoothScanner {
         }
     }
 
-    fun startScanning(context: Context) {
+    fun startScanning() {
         val hasScanPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.BLUETOOTH_SCAN
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
         val hasConnectPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.BLUETOOTH_CONNECT
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
-        if (hasScanPermission && hasConnectPermission && bluetoothAdapter?.isEnabled == true) {
+        val hasLocationPermission = ContextCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+
+        if (hasScanPermission && hasConnectPermission && hasLocationPermission && bluetoothAdapter?.isEnabled == true) {
             scanner?.startScan(scanCallback)
         } else {
-            throw SecurityException("Bluetooth permissions not granted or Bluetooth is disabled")
+            throw SecurityException("Bluetooth permissions not granted, location permission missing, or Bluetooth is disabled")
         }
     }
 
-    fun stopScanning(context: Context) {
+    fun stopScanning() {
         val hasScanPermission = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.BLUETOOTH_SCAN
@@ -66,6 +84,6 @@ class BluetoothScanner {
 
     private fun isPotentialTracker(result: ScanResult): Boolean {
         val manufacturerData = result.scanRecord?.manufacturerSpecificData
-        return manufacturerData?.get(0x004C) != null // AirTags use Apple’s manufacturer ID (0x004C)
+        return manufacturerData?.get(0x004C) != null
     }
 }

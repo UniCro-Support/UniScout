@@ -1,25 +1,50 @@
-package com.example.unitrack
+/*
+ * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * This software is proprietary and may not be copied, modified,
+ * or distributed without explicit permission from UniCro, Inc US.
+ */
+package com.unicro.uniscout
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.Tag
+import android.os.Build
 import android.os.Bundle
 import android.app.PendingIntent
+import android.content.Context
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.content.pm.PackageManager
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
+fun getCopyrightNotice(context: Context): String? {
+    return try {
+        val appInfo = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+        appInfo.metaData.getString("com.unicro.uniscout.copyright")
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+        null
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.S) // API 31 (Android 12)
+@SuppressLint("ObsoleteSdkInt") // Suppress warning for the entire class
 class MainActivity : ComponentActivity() {
 
     private val permissionLauncher = registerForActivityResult(
@@ -55,16 +80,14 @@ class MainActivity : ComponentActivity() {
             arrayOf(
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.UWB_RANGING,
-                Manifest.permission.COMPANION_DEVICE_PRESENCE,
-                Manifest.permission.ACCESS_COARSE_LOCATION
+                Manifest.permission.COMPANION_DEVICE_PRESENCE
             )
         )
     }
 
     private fun startScanning() {
-        bluetoothScanner = BluetoothScanner()
+        bluetoothScanner = BluetoothScanner(this) // Pass the Activity context
         try {
             lifecycleScope.launch {
                 bluetoothScanner.devices.collectLatest { devices ->
@@ -72,7 +95,7 @@ class MainActivity : ComponentActivity() {
                     detectedDevices.addAll(devices.map { it.device.address })
                 }
             }
-            bluetoothScanner.startScanning(this)
+            bluetoothScanner.startScanning()
         } catch (e: SecurityException) {
             Toast.makeText(this, "Bluetooth permissions denied", Toast.LENGTH_LONG).show()
         }
@@ -83,7 +106,7 @@ class MainActivity : ComponentActivity() {
         val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         if (nfcAdapter != null && nfcAdapter.isEnabled) {
             val intent = Intent(this, javaClass).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_MUTABLE)
+            val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             val intentFilters = arrayOf(
                 IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED).apply { addDataType("*/*") },
                 IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED),
@@ -97,21 +120,24 @@ class MainActivity : ComponentActivity() {
         super.onPause()
         NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
         try {
-            bluetoothScanner.stopScanning(this)
+            bluetoothScanner.stopScanning()
         } catch (e: SecurityException) {
             Toast.makeText(this, "Bluetooth permissions denied", Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.let {
-            if (NfcAdapter.ACTION_TAG_DISCOVERED == it.action) {
-                val tag = it.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
-                tag?.let { t ->
-                    val tagId = t.id.toHexString()
-                    detectedNFCTags.add("NFC Tag: $tagId")
-                }
+        if (NfcAdapter.ACTION_TAG_DISCOVERED == intent.action) {
+            val tag: Tag? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(NfcAdapter.EXTRA_TAG, Tag::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(NfcAdapter.EXTRA_TAG) as? Tag
+            }
+            tag?.let { t ->
+                val tagId = t.id.toHexString()
+                detectedNFCTags.add("NFC Tag: $tagId")
             }
         }
     }
@@ -132,9 +158,10 @@ fun MainScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(rememberScrollState())
     ) {
         Text(
-            text = "UniTrack - Device Scanner",
+            text = "UniScout - Device Scanner",
             style = MaterialTheme.typography.headlineMedium
         )
 
@@ -157,5 +184,15 @@ fun MainScreen(
         nfcTags.forEach { tag ->
             Text(tag)
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = getCopyrightNotice(LocalContext.current) ?: "Error loading copyright",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            softWrap = true
+        )
     }
 }
