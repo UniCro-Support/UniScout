@@ -42,6 +42,9 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.14"
+    }
 }
 
 dependencies {
@@ -55,16 +58,18 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.runtime.livedata) // For LiveData with Compose
+    implementation(libs.androidx.compose.runtime.livedata)
 
     // Lifecycle and Coroutines for Flows
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.compose) // For ViewModel in Compose
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.kotlinx.coroutines.android)
 
     // Material Design (optional, for theming)
     implementation(libs.material)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui.tooling.preview)
 
     // Testing dependencies
     testImplementation(libs.junit)
@@ -74,4 +79,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.ui.tooling)
 }

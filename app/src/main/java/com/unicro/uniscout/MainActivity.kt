@@ -7,31 +7,47 @@ package com.unicro.uniscout
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
-import android.app.PendingIntent
-import android.content.Context
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.unicro.uniscout.ui.theme.UniScoutTheme
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import android.content.pm.PackageManager
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 
 fun getCopyrightNotice(context: Context): String? {
     return try {
@@ -64,16 +80,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
-            MaterialTheme {
-                MainScreen(
-                    devices = detectedDevices,
-                    nfcTags = detectedNFCTags,
-                    onStartScan = { startScanning() }
-                )
+            UniScoutTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppNavigation()
+                }
             }
         }
+
+
 
         // Request permissions
         permissionLauncher.launch(
@@ -81,7 +99,6 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.BLUETOOTH_SCAN,
                 Manifest.permission.BLUETOOTH_CONNECT,
                 Manifest.permission.UWB_RANGING,
-                Manifest.permission.COMPANION_DEVICE_PRESENCE
             )
         )
     }
@@ -148,6 +165,22 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
+            MainScreen(navController = navController)
+        }
+        composable(
+            "scanner/{scannerType}",
+            arguments = listOf(navArgument("scannerType") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val scannerTypeString = backStackEntry.arguments?.getString("scannerType")
+            val scannerType = ScannerType.valueOf(scannerTypeString!!)
+            ScannerPage(scannerType = scannerType)
+        }
+    }
+}
 fun MainScreen(
     devices: List<String>,
     nfcTags: List<String>,
