@@ -2,6 +2,9 @@
   <settings default="UniCro_ Inc US">
     <module2copyright>
       <element module="All" copyright="UniCro_ Inc US" />
+      <element module="Project Files" copyright="UniCro_ Inc US" />
+      <element module="All Changed Files" copyright="UniCro_ Inc US" />
+      <element module="Open Files" copyright="UniCro_ Inc US" />
     </module2copyright>
   </settings>
 </component>

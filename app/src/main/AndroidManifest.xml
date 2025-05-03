@@ -3,10 +3,12 @@
 This software is proprietary and may not be copied, modified, or distributed
 without explicit permission from UniCro, Inc US. -->
 <manifest xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.unicro.uniscout">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Permissions -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.UWB_RANGING" />
@@ -16,14 +18,22 @@ without explicit permission from UniCro, Inc US. -->
     <!-- Ensure Bluetooth LE is available -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
 
+    <!-- Ensure UWB is available -->
+
+    <!-- Ensure WiFi is available -->
+
     <!-- Ensure NFC is available -->
     <uses-feature android:name="android.hardware.nfc" android:required="true"
         tools:ignore="UnnecessaryRequiredFeature" />
 
+    <!-- Ensure LICENSE/EULA is Acknowledged -->
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.UniScout"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true">
 
         <!-- Copyright Metadata -->
         <meta-data
@@ -33,11 +43,16 @@ without explicit permission from UniCro, Inc US. -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <!-- Launcher Intent Filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <meta-data
+                android:name="copyright_notice"
+                android:value="@string/copyright_text_shorthand" />
+
             <!-- NFC Intent Filters -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />

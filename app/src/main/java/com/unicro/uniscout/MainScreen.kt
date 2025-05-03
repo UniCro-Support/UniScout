@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -78,9 +79,18 @@ fun MainScreen(navController: NavController) {
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            InfoButton(text = "About") { /* Handle About */ }
-            InfoButton(text = "Support") { /* Handle Support */ }
+            InfoButton(text = "@string/about") { /* Handle About */ }
+            InfoButton(text = "@string/support") { /* Handle Support */ }
         }
+
+        Text(
+            text = getCopyrightNotice(LocalContext.current) ?: "Error loading copyright",
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            softWrap = true
+        )
     }
 }
 

@@ -51,8 +51,9 @@ import kotlinx.coroutines.launch
 
 fun getCopyrightNotice(context: Context): String? {
     return try {
-        val appInfo = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
-        appInfo.metaData.getString("com.unicro.uniscout.copyright")
+        val packageName = context.packageName
+        val appInfo = context.packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        appInfo.metaData?.getString("com.unicro.uniscout.copyright")
     } catch (e: PackageManager.NameNotFoundException) {
         e.printStackTrace()
         null
@@ -83,15 +84,21 @@ class MainActivity : ComponentActivity() {
         setContent {
             UniScoutTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation()
+                    try {
+                        AppNavigation()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            this,
+                            "Navigation Error: ${e.localizedMessage}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
-
-
 
         // Request permissions
         permissionLauncher.launch(
@@ -104,7 +111,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun startScanning() {
-        bluetoothScanner = BluetoothScanner(this) // Pass the Activity context
+        bluetoothScanner = BluetoothScanner(this) // Initialize BluetoothScanner
         try {
             lifecycleScope.launch {
                 bluetoothScanner.devices.collectLatest { devices ->
@@ -176,56 +183,20 @@ fun AppNavigation() {
             arguments = listOf(navArgument("scannerType") { type = NavType.StringType })
         ) { backStackEntry ->
             val scannerTypeString = backStackEntry.arguments?.getString("scannerType")
-            val scannerType = ScannerType.valueOf(scannerTypeString!!)
-            ScannerPage(scannerType = scannerType)
-        }
-    }
-}
-fun MainScreen(
-    devices: List<String>,
-    nfcTags: List<String>,
-    onStartScan: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = "UniScout - Device Scanner",
-            style = MaterialTheme.typography.headlineMedium
-        )
+            val scannerType = try {
+                scannerTypeString?.let { ScannerType.valueOf(it) }
+            } catch (e: IllegalArgumentException) {
+                null // Handle invalid or missing enum gracefully
+            }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = onStartScan) {
-            Text("Start Scanning")
+            scannerType?.let {
+                // Proceed if scannerType is valid
+                ScannerPage(scannerType = it)
+            } ?: run {
+                // Show an error screen or handle invalid input here
+                Text("Invalid or missing Scanner Type")
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("Bluetooth Devices: ${devices.size}")
-        devices.forEach { device ->
-            Text("Device: $device")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text("NFC Tags: ${nfcTags.size}")
-        nfcTags.forEach { tag ->
-            Text(tag)
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = getCopyrightNotice(LocalContext.current) ?: "Error loading copyright",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            softWrap = true
-        )
     }
 }
