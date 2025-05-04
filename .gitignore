@@ -5,6 +5,7 @@
 # Gradle files
 .gradle/
 gradle/
+
 # Gradle files for Solo Development / Remove files for Shared Develpoment
 gradlew
 gradlew.bat
