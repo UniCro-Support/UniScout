@@ -1,15 +1,32 @@
+# IntelliJ IDEA / Android Studio files
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/
+
+# Gradle files
+.gradle/
+gradle/
+# Gradle files for Solo Development / Remove files for Shared Develpoment
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+
+# Build output
+/build/
+*.apk
+*.aar
+
+# Local configuration
 local.properties
+
+# Native build artifacts
+.externalNativeBuild/
+.cxx/
+
+# Screen captures
+/captures/
+
+# macOS-specific files
+.DS_Store
+
+# Miscellaneous
+*.log

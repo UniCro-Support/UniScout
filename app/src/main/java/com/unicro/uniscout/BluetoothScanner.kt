@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 class BluetoothScanner(private val context: Context) {
 
     private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothAdapter: BluetoothAdapter? = BluetoothManager.adapter()
+    private val bluetoothManager: BluetoothAdapter? = BluetoothManager.adapter()
 
     private val scanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
     private val _devices = MutableStateFlow<List<ScanResult>>(emptyList())

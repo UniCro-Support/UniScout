@@ -7,15 +7,14 @@ package com.unicro.uniscout
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.PendingIntent
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Build
 import android.os.Bundle
+import android.app.PendingIntent
+import android.content.Context
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -48,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import android.content.pm.PackageManager
 
 fun getCopyrightNotice(context: Context): String? {
     return try {
@@ -65,8 +65,7 @@ fun getCopyrightNotice(context: Context): String? {
 class MainActivity : ComponentActivity() {
 
     private val permissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
+        ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
         if (permissions.all { it.value }) {
             Toast.makeText(this, "Permissions granted", Toast.LENGTH_SHORT).show()
             startScanning()
@@ -96,18 +95,22 @@ class MainActivity : ComponentActivity() {
                             Toast.LENGTH_LONG
                         ).show()
                     }
+
+                }
+                val bluetoothScanner = BluetoothScanner(this) // Request permissions
+                LaunchedEffect(Unit) {
+
+                    permissionLauncher.launch(
+                        arrayOf(
+                            Manifest.permission.BLUETOOTH_SCAN,
+                            Manifest.permission.BLUETOOTH_CONNECT,
+                            Manifest.permission.UWB_RANGING,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        )
+                    )
                 }
             }
         }
-
-        // Request permissions
-        permissionLauncher.launch(
-            arrayOf(
-                Manifest.permission.BLUETOOTH_SCAN,
-                Manifest.permission.BLUETOOTH_CONNECT,
-                Manifest.permission.UWB_RANGING,
-            )
-        )
     }
 
     private fun startScanning() {
