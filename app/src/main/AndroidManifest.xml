@@ -11,6 +11,8 @@ without explicit permission from UniCro, Inc US. -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
+        tools:ignore="CoarseFineLocation" />
     <uses-permission android:name="android.permission.UWB_RANGING" />
     <uses-permission android:name="android.permission.COMPANION_DEVICE_PRESENCE" />
     <uses-permission android:name="android.permission.NFC" />

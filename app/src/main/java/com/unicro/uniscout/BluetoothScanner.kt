@@ -8,6 +8,7 @@ package com.unicro.uniscout
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
@@ -24,8 +25,8 @@ import kotlinx.coroutines.flow.asStateFlow
 @SuppressLint("ObsoleteSdkInt", "UNCHECKED_CAST", "ServiceCast") // Suppress both warnings for the entire class
 class BluetoothScanner(private val context: Context) {
 
-    private val bluetoothAdapter: BluetoothAdapter? =
-        context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothAdapter?
+    private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    private val bluetoothAdapter: BluetoothAdapter? = BluetoothManager.adapter()
 
     private val scanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
     private val _devices = MutableStateFlow<List<ScanResult>>(emptyList())

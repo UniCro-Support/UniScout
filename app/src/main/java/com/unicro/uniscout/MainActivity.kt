@@ -142,6 +142,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
+        if (::bluetoothScanner.isInitialized) {
+            bluetoothScanner.stopScanning()
         NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
         try {
             bluetoothScanner.stopScanning()
