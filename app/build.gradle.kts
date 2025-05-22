@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.uwb)
 
     // Testing dependencies
     testImplementation(libs.junit)
