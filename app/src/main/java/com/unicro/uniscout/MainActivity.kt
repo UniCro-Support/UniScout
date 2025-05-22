@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * Copyright (c) 2025 UniCro, LLC US. All rights reserved.
  * This software is proprietary and may not be copied, modified,
- * or distributed without explicit permission from UniCro, Inc US.
+ * or distributed without explicit permission from UniCro, LLC US.
  */
 package com.unicro.uniscout
 
@@ -20,48 +20,34 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Modifier
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.NavType
 import com.unicro.uniscout.ui.theme.UniScoutTheme
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import android.content.pm.PackageManager
 
 fun getCopyrightNotice(context: Context): String? {
     return try {
         val packageName = context.packageName
-        val appInfo = context.packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA)
+        val appInfo = context.packageManager.getApplicationInfo(packageName, android.content.pm.PackageManager.GET_META_DATA)
         appInfo.metaData?.getString("com.unicro.uniscout.copyright")
-    } catch (e: PackageManager.NameNotFoundException) {
+    } catch (e: android.content.pm.PackageManager.NameNotFoundException) {
         e.printStackTrace()
         null
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.S) // API 31 (Android 12)
-@SuppressLint("ObsoleteSdkInt") // Suppress warning for the entire class
+@SuppressLint("ObsoleteSdkInt")
 class MainActivity : ComponentActivity() {
 
     private val permissionLauncher = registerForActivityResult(
@@ -80,44 +66,33 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        bluetoothScanner = BluetoothScanner(application)
         setContent {
             UniScoutTheme {
                 Surface(
-                    modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    try {
-                        AppNavigation()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            this,
-                            "Navigation Error: ${e.localizedMessage}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-
-                }
-                val bluetoothScanner = BluetoothScanner(this) // Request permissions
-                LaunchedEffect(Unit) {
-
-                    permissionLauncher.launch(
-                        arrayOf(
-                            Manifest.permission.BLUETOOTH_SCAN,
-                            Manifest.permission.BLUETOOTH_CONNECT,
-                            Manifest.permission.UWB_RANGING,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                    AppNavigation()
+                    LaunchedEffect(Unit) {
+                        permissionLauncher.launch(
+                            arrayOf(
+                                Manifest.permission.BLUETOOTH_SCAN,
+                                Manifest.permission.BLUETOOTH_CONNECT,
+                                Manifest.permission.UWB_RANGING,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
     }
 
     private fun startScanning() {
-        bluetoothScanner = BluetoothScanner(this) // Initialize BluetoothScanner
         try {
             lifecycleScope.launch {
-                bluetoothScanner.devices.collectLatest { devices ->
+                bluetoothScanner.devices.collect { devices ->
                     detectedDevices.clear()
                     detectedDevices.addAll(devices.map { it.device.address })
                 }
@@ -146,13 +121,13 @@ class MainActivity : ComponentActivity() {
     override fun onPause() {
         super.onPause()
         if (::bluetoothScanner.isInitialized) {
-            bluetoothScanner.stopScanning()
-        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
-        try {
-            bluetoothScanner.stopScanning()
-        } catch (e: SecurityException) {
-            Toast.makeText(this, "Bluetooth permissions denied", Toast.LENGTH_LONG).show()
+            try {
+                bluetoothScanner.stopScanning()
+            } catch (e: SecurityException) {
+                Toast.makeText(this, "Bluetooth permissions denied", Toast.LENGTH_LONG).show()
+            }
         }
+        NfcAdapter.getDefaultAdapter(this)?.disableForegroundDispatch(this)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -195,13 +170,10 @@ fun AppNavigation() {
             }
 
             scannerType?.let {
-                // Proceed if scannerType is valid
                 ScannerPage(scannerType = it)
             } ?: run {
-                // Show an error screen or handle invalid input here
                 Text("Invalid or missing Scanner Type")
             }
         }
-
     }
 }
