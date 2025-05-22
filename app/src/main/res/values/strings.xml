@@ -1,18 +1,19 @@
-<!-- Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+<!-- Copyright (c) 2025 UniCro, LLC US. All rights reserved.
 This software is proprietary and may not be copied, modified, or distributed
-without explicit permission from UniCro, Inc US. -->
+without explicit permission from UniCro, LLC US. -->
 <resources>
     <string name="app_name">UniScout</string>
-    <string name="hello_uniscout">\t\t\t\t\t\t\t\t\t\t\t\tWelcome UniScouter\n\tUniScout is here to do the hard work\n\t\t\t\t\t\t\t\tso you get peace of mind! </string>
-    <string name="copyright_text">Copyright &#169; 2025 UniScout by UniCro, Inc US. All rights reserved. This software is proprietary and may not be copied, modified, or distributed without explicit permission from (&#169;) UniCro, Inc US.</string>
-    <string name="copyright_text_shorthand">Copyright &#169; 2025 UniScout by UniCro, Inc US. All rights reserved.</string>
+    <string name="hello_uniscout">Hello, UniScouter!</string>
+    <string name="welcome_uniscout">\t\t\t\t\t\t\t\t\t\t\t\tWelcome UniScouter\n\tUniScout is here to do the hard work\n\t\t\t\t\t\t\t\tso you get peace of mind! </string>
+    <string name="copyright_text">Copyright &#169; 2025 UniScout by UniCro, LLC US. All rights reserved. This software is proprietary and may not be copied, modified, or distributed without explicit permission from (&#169;) UniCro, LLC US.</string>
+    <string name="copyright_text_shorthand">Copyright &#169; 2025 UniScout by UniCro, LLC US. All rights reserved.</string>
     <string name="copyright_text_abrv">&#169; UniScout 2025</string>
-    <string name="scan_nfc">SCAN NFC</string>
-    <string name="scan_uwb">SCAN UWB</string>
-    <string name="scan_bt">SCAN BT</string>
-    <string name="scan_ble">SCAN BLE</string>
+    <string name="scan_nfc">SCAN\nNEAR-FIELD COMMUNICATION</string>
+    <string name="scan_uwb">SCAN\nULTRA WIDE BAND</string>
+    <string name="scan_bt">SCAN\nBLUETOOTH</string>
+    <string name="scan_ble">SCAN\nBLUETOOTH LOW ENERGY</string>
     <string name="scan_all">SCAN ALL</string>
-    <string name="scan_wifi">SCAN WIFI\n(in dev)</string>
+    <string name="scan_wifi">SCAN WI-FI\n(in development)</string>
     <string name="about_text">ABOUT</string>
     <string name="support_text">SUPPORT</string>
     
