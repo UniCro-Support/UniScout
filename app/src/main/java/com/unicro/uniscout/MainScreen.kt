@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 
 @Composable
@@ -30,7 +31,7 @@ fun MainScreen(navController: NavController) {
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = "@string/hello_uniscout",
+            text = stringResource(R.string.hello_uniscout),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Start,
@@ -40,34 +41,34 @@ fun MainScreen(navController: NavController) {
         )
 
         ScanningButton(
-            text = "@string/scan_nfc",
+            text = stringResource(R.string.scan_nfc),
             containerColor = Color(0xFFFFEE58),
             onClick = { navController.navigate("scanner/NFC") }
         )
         ScanningButton(
-            text = "@string/scan_bt",
+            text = stringResource(R.string.scan_bt),
             containerColor = Color(0xFFFFEE58),
             onClick = { navController.navigate("scanner/BT") }
         )
         ScanningButton(
-            text = "@string/scan_uwb",
+            text = stringResource(R.string.scan_uwb),
             containerColor = Color(0xFFFFEE58),
             onClick = { navController.navigate("scanner/UWB") }
         )
         ScanningButton(
-            text = "@string/scan_ble",
+            text = stringResource(R.string.scan_ble),
             containerColor = Color(0xFFFFEE58),
             onClick = { navController.navigate("scanner/BLE") }
         )
         ScanningButton(
-            text = "@string/scan_all",
+            text = stringResource(R.string.scan_all),
             containerColor = Color(0xFFEB0909),
             contentColor = Color(0xFFFFEB3B),
             textStyle = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp),
             onClick = { navController.navigate("scanner/ALL") }
         )
         ScanningButton(
-            text = "@string/scan_wifi",
+            text = stringResource(R.string.scan_wifi),
             containerColor = Color(0xFFACB0B1),
             textStyle = MaterialTheme.typography.bodyMedium.copy(fontStyle = FontStyle.Italic),
             onClick = { navController.navigate("scanner/WIFI") }
@@ -79,8 +80,12 @@ fun MainScreen(navController: NavController) {
                 .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            InfoButton(text = "@string/about") { /* Handle About */ }
-            InfoButton(text = "@string/support") { /* Handle Support */ }
+            InfoButton(text = stringResource(R.string.about_text)) {
+                // TODO: Navigate to About screen or show About dialog
+            }
+            InfoButton(text = stringResource(R.string.support_text)) {
+                // TODO: Navigate to Support screen or show Support dialog
+            }
         }
 
         Text(
