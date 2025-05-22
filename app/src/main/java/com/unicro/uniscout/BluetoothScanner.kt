@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * Copyright (c) 2025 UniCro, LLC US. All rights reserved.
  * This software is proprietary and may not be copied, modified,
- * or distributed without explicit permission from UniCro, Inc US.
+ * or distributed without explicit permission from UniCro, LLC US.
  */
 package com.unicro.uniscout
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeScanner
@@ -22,12 +23,11 @@ import kotlinx.coroutines.flow.asStateFlow
 
 
 @RequiresApi(Build.VERSION_CODES.S) // API 31 (Android 12)
-@SuppressLint("ObsoleteSdkInt", "UNCHECKED_CAST", "ServiceCast") // Suppress both warnings for the entire class
-class BluetoothScanner(private val context: Context) {
+@SuppressLint("ObsoleteSdkInt", "UNCHECKED_CAST", "ServiceCast")
+class BluetoothScanner(private val application: Application) {
 
-    private val bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-    private val bluetoothManager: BluetoothAdapter? = BluetoothManager.adapter()
-
+    private val bluetoothManager = application.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+    private val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.adapter
     private val scanner: BluetoothLeScanner? = bluetoothAdapter?.bluetoothLeScanner
     private val _devices = MutableStateFlow<List<ScanResult>>(emptyList())
     val devices: StateFlow<List<ScanResult>> = _devices.asStateFlow()
@@ -49,17 +49,17 @@ class BluetoothScanner(private val context: Context) {
 
     fun startScanning() {
         val hasScanPermission = ContextCompat.checkSelfPermission(
-            context,
+            application,
             Manifest.permission.BLUETOOTH_SCAN
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
         val hasConnectPermission = ContextCompat.checkSelfPermission(
-            context,
+            application,
             Manifest.permission.BLUETOOTH_CONNECT
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
         val hasLocationPermission = ContextCompat.checkSelfPermission(
-            context,
+            application,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
@@ -72,7 +72,7 @@ class BluetoothScanner(private val context: Context) {
 
     fun stopScanning() {
         val hasScanPermission = ContextCompat.checkSelfPermission(
-            context,
+            application,
             Manifest.permission.BLUETOOTH_SCAN
         ) == android.content.pm.PackageManager.PERMISSION_GRANTED
 
@@ -85,6 +85,6 @@ class BluetoothScanner(private val context: Context) {
 
     private fun isPotentialTracker(result: ScanResult): Boolean {
         val manufacturerData = result.scanRecord?.manufacturerSpecificData
-        return manufacturerData?.get(0x004C) != null
+        return manufacturerData?.get(0x004C) != null // Example check for Apple manufacturer data
     }
 }
