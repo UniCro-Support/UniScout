@@ -1,49 +1,41 @@
 /*
- * Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+ * Copyright (c) 2025 UniCro, LLC US. All rights reserved.
  * This software is proprietary and may not be copied, modified,
- * or distributed without explicit permission from UniCro, Inc US.
+ * or distributed without explicit permission from UniCro, LLC US.
  */
 package com.unicro.uniscout
 
-import android.content.Context
+import android.app.Application
+import android.uwb.UwbManager
 import androidx.core.content.ContextCompat
+import androidx.core.uwb.UwbManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class UwbScanner(private val context: Context) {
+class UwbScanner(private val application: Application) {
 
-    private val uwbManager: UwbManager? = ContextCompat.getSystemService(context, UwbManager::class.java)
-
-    class UwbManager {
-
-    }
-
+    private val uwbManager: UwbManager? = ContextCompat.getSystemService(application, UwbManager::class.java)
     private val _trackers = MutableStateFlow<List<UwbDevice>>(emptyList())
     val trackers: StateFlow<List<UwbDevice>> = _trackers
 
     fun startScanning() {
-        if (uwbManager == null) {
+        if (uwbManager == null || !application.packageManager.hasSystemFeature("android.hardware.uwb")) {
             println("UWB not supported on this device")
             return
         }
-
-        // Check if UWB is available
-        if (!context.packageManager.hasSystemFeature("android.hardware.uwb")) {
-            println("UWB hardware not present")
-            return
-        }
-
-        // Start UWB ranging (simplified for demo; actual implementation requires UWB session setup)
-        // Note: UWB APIs require a proper ranging session, which varies by device and Android version
-        // This is a placeholder for directional data (distance, angle)
-        val uwbDevice = UwbDevice("UWB Tracker", 2.5f, 45f) // Example data: 2.5m, 45 degrees
+        // TODO: Implement actual UWB scanning
+        // 1. Create a UwbRangingSession using uwbManager
+        // 2. Handle ranging results via RangingResultCallback
+        // 3. Update _trackers with real UwbDevice data
+        // Placeholder for now
+        val uwbDevice = UwbDevice("UWB Tracker", 2.5f, 45f)
         _trackers.value = listOf(uwbDevice)
     }
 
     fun stopScanning() {
-        // Stop UWB session (placeholder)
+        // TODO: Stop UWB ranging session when implemented
     }
 }
 
-// Data class to hold UWB device info
 data class UwbDevice(val address: String, val distance: Float, val angle: Float)
+// Data class to hold UWB device info
