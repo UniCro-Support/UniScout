@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) 2025 UniCro, Inc US. All rights reserved.
+<!-- Copyright (c) 2025 UniCro, LLC US. All rights reserved.
 This software is proprietary and may not be copied, modified, or distributed
-without explicit permission from UniCro, Inc US. -->
+without explicit permission from UniCro, LLC US. -->
 <manifest xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Permissions -->
+    <!-- Permissions for Bluetooth-->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
+
+    <!-- Permissions for UWB -->
     <uses-permission android:name="android.permission.UWB_RANGING" />
-    <uses-permission android:name="android.permission.COMPANION_DEVICE_PRESENCE" />
+
+    <!-- Permissions for WiFi -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- Permissions for NFC -->
     <uses-permission android:name="android.permission.NFC" />
+
+    <!-- Permissions for Other -->
+    <uses-permission android:name="android.permission.COMPANION_DEVICE_PRESENCE" />
 
     <!-- Ensure Bluetooth LE is available -->
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
@@ -30,31 +38,28 @@ without explicit permission from UniCro, Inc US. -->
 
     <!-- Ensure LICENSE/EULA is Acknowledged -->
 
+    <!-- Feature declarations -->
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+    <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <uses-feature android:name="android.hardware.uwb" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+
     <application
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.UniScout"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
-
-        <!-- Copyright Metadata -->
-        <meta-data
-            android:name="com.unicro.uniscout.copyright"
-            android:value="@string/copyright_text" />
+        android:supportsRtl="true"
+        android:theme="@style/Theme.UniScout">
 
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <!-- Launcher Intent Filter -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data
-                android:name="copyright_notice"
-                android:value="@string/copyright_text_shorthand" />
-
             <!-- NFC Intent Filters -->
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
@@ -70,6 +75,11 @@ without explicit permission from UniCro, Inc US. -->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <!-- Copyright Metadata -->
+        <meta-data
+            android:name="com.unicro.uniscout.copyright"
+            android:value="@string/copyright_text" />
 
         <!-- Reference NFC Tech Filter -->
         <meta-data
